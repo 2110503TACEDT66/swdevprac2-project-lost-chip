@@ -70,6 +70,8 @@ export default function CreateCampground({
     store: false,
   })
 
+  const [image, setImage] = useState<FormData>()
+
   const facilitiesList: (keyof {
     toilet: boolean
     electricity: boolean
@@ -109,8 +111,7 @@ export default function CreateCampground({
       subdistrict &&
       district &&
       province &&
-      postalCode &&
-      tentForRent
+      postalCode
     ) {
       const address = {
         houseNumber: houseNum,
@@ -153,6 +154,22 @@ export default function CreateCampground({
             facilitiesArray,
             tentForRent
           )
+          if (image) {
+            try {
+              const response = await fetch(
+                `${process.env.BACKEND_URL}/api/campgrounds/${paramsCgid}/upload-image`,
+                {
+                  method: 'POST',
+                  headers: {
+                    authorization: `Bearer ${session.user?.token}`,
+                  },
+                  body: image,
+                }
+              )
+            } catch (error) {
+              console.error('Error enhancing image:', error)
+            }
+          }
         }
       }
       callAPI()
@@ -559,16 +576,31 @@ export default function CreateCampground({
                   />
                 </FormGroup>
               </div>
-              <p>Upload image : </p>
-              <Button
-                component='label'
-                role={undefined}
-                variant='contained'
-                tabIndex={-1}
-                className='bg-cgr-dark-green active:bg-cgr-dark-green hover:bg-cgr-dark-green focus:bg-cgr-dark-green'>
-                Upload file
-                <VisuallyHiddenInput type='file' />
-              </Button>
+              {params.type == 'create' ? '' : <p>Upload image : </p>}
+
+              {params.type == 'create' ? (
+                ''
+              ) : (
+                <Button
+                  component='label'
+                  role={undefined}
+                  variant='contained'
+                  tabIndex={-1}
+                  className='bg-cgr-dark-green active:bg-cgr-dark-green hover:bg-cgr-dark-green focus:bg-cgr-dark-green'>
+                  {image ? 'Ready' : 'Upload file'}
+                  <VisuallyHiddenInput
+                    type='file'
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      if (!event.target.files) return
+
+                      const file = event.target.files[0]
+                      const formData = new FormData()
+                      formData.append('file', file)
+                      setImage(formData)
+                    }}
+                  />
+                </Button>
+              )}
             </div>
             <div className='flex place-content-center w-full'>
               <button className='cgr-btn mt-8 w-full md:w-2/3' onClick={submit}>
