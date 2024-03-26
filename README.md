@@ -1,3 +1,8 @@
+We are working in our repository, you can see our contributions in this repository -> https://github.com/Piinxluna/SWDPractice2-CGR-Project
+And our vercel is also deploy from the repository, which is in this link -> https://swd-practice2-cgr-project.vercel.app/
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
